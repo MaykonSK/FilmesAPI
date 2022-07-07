@@ -1,5 +1,6 @@
 ﻿using FilmesAPI.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FilmesAPI.Services
 {
@@ -7,15 +8,16 @@ namespace FilmesAPI.Services
     {
         //cria uma lista de filme
         private static List<Filme> filmes = new List<Filme>();
+        private static int id = 1;
 
-        public bool adicionarFilme(Filme filme)
+        public bool AdicionarFilme(Filme filme)
         {
             bool status = false;
             bool existe = false;
 
             if (filme != null)
             {
-                foreach (var item in filmes)
+                foreach (Filme item in filmes)
                 {
                     if (item.Id == filme.Id)
                     {
@@ -27,6 +29,7 @@ namespace FilmesAPI.Services
                 if (!existe)
                 {
                     //add o filme
+                    filme.Id = id++;
                     filmes.Add(filme);
 
                     status = true;
@@ -36,9 +39,26 @@ namespace FilmesAPI.Services
             return status;
         }
 
-        public List<Filme> recuperarFilmes()
+        public List<Filme> RecuperarFilmes()
         {
             return filmes; 
+        }
+
+        public Filme RecuperarFilmeId(int id)
+        {
+            //metodo 1
+            //foreach (Filme item in filmes)
+            //{
+            //    if (item.Id == id)
+            //    {
+            //        return item;
+            //    }
+            //}
+
+            //return null;
+
+            //metood 2
+            return filmes.FirstOrDefault(x => x.Id == id);
         }
     }
 }

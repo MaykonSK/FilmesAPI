@@ -1,3 +1,4 @@
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace FilmesAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
             });
+            services.AddTransient<FilmeService>(); //ativa a classe como service
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

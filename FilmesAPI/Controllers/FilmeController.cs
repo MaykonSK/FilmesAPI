@@ -1,6 +1,7 @@
 ﻿using FilmesAPI.Models;
 using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace FilmesAPI.Controllers
@@ -9,20 +10,20 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")] //vai referenciar esse controlador local
     public class FilmeController : ControllerBase //define a classe como controller
     {
-        FilmeService service = new FilmeService();
+        private readonly FilmeService _service; 
+
+        public FilmeController(FilmeService service) //chama o serviço no construtor
+        {
+            _service = service; //atribui o serviço na variavel _service 
+        }
 
         [HttpGet]
         public ActionResult<Filme> Filme() //ActionResult retorna uma lista + status
         {
             try
             {
-                List<Filme> filmes = service.recuperarFilmes();
-                if (filmes.Count == 0)
-                {
-                    return NotFound();
-                }
-
-                return Ok(filmes);
+                //no padrão REST, não precisa informar notfound para uma lista geral
+                return Ok(_service.RecuperarFilmes());
             }
             catch (System.Exception)
             {
@@ -31,12 +32,11 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Filme([FromBody] Filme filme)
+        public ActionResult Filme([FromBody] Filme filme) 
         {
             try
             {
-                bool status = service.adicionarFilme(filme);
-                return Ok(status);
+                return Ok(_service.AdicionarFilme(filme));
             }
             catch (System.Exception)
             {
@@ -44,5 +44,23 @@ namespace FilmesAPI.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public IActionResult Filme([FromRoute] int id) //IActionResult não precisa informar o objeto de retorno
+        {
+            try
+            {
+                var filme = _service.RecuperarFilmeId(id);
+                if (filme == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(filme);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
