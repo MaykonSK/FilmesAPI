@@ -1,6 +1,8 @@
 ﻿using FilmesAPI.Data;
+using FilmesAPI.Data.DTO;
 using FilmesAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,29 +18,26 @@ namespace FilmesAPI.Services
             _context = context;
         }
 
-        public bool AdicionarFilme(Filme filme)
+        public bool AdicionarFilme(GetFilmesDto filmeDto)
         {
             bool status = false;
-            bool existe = false;
+
+            //passar os dados do DTO para o filme
+            Filme filme = new Filme
+            {
+                Titulo = filmeDto.Titulo,
+                Diretor = filmeDto.Diretor,
+                Genero = filmeDto.Genero,
+                Duracao = filmeDto.Duracao,
+                Ano_Lancamento = filmeDto.Ano_Lancamento,
+            };
 
             if (filme != null)
             {
-                foreach (Filme item in _context.Filmes)
-                {
-                    if (item.Id == filme.Id)
-                    {
-                        existe = true;
-                        break;
-                    }
-                }
-
-                if (!existe)
-                {
-                    //add o filme
-                    _context.Filmes.Add(filme); //adiciona o filme
-                    _context.SaveChanges(); //informa que quer salvar
-                    status = true;
-                }
+                 //add o filme
+                _context.Filmes.Add(filme); //adiciona o filme
+                _context.SaveChanges(); //informa que quer salvar
+                status = true;
 
             }
             return status;
@@ -46,24 +45,30 @@ namespace FilmesAPI.Services
 
         public IEnumerable<Filme> RecuperarFilmes()
         {
-            return _context.Filmes; //recupera todos os filmes
+            //return _context.Filmes; //recupera todos os filmes
+            IEnumerable<Filme> filme =  _context.Filmes.ToList();
+            return filme;
+
         }
 
-        public Filme RecuperarFilmeId(int id)
-        {
-            //metodo 1
-            //foreach (Filme item in filmes)
-            //{
-            //    if (item.Id == id)
-            //    {
-            //        return item;
-            //    }
-            //}
+        public GetFilmesDto RecuperarFilmeId(int id)
+        {     
+            //recupera dado no banco
+            Filme filme = _context.Filmes.FirstOrDefault(x => x.Id == id);
 
-            //return null;
+            //Remodelando o retorno - retorna DTO
+            GetFilmesDto filmeDto = new GetFilmesDto
+            {
+                Id = filme.Id,
+                Titulo = filme.Titulo,
+                Diretor = filme.Diretor,
+                Genero = filme.Genero,
+                Duracao = filme.Duracao,
+                Ano_Lancamento = filme.Ano_Lancamento,
+                HoraDaConsulta = DateTime.Now
+            };
 
-            //metood 2
-            return _context.Filmes.FirstOrDefault(x => x.Id == id);
+            return filmeDto;
         }
         public bool RemoverFilme(int id)
         {

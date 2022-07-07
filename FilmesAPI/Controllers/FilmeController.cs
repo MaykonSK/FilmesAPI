@@ -1,4 +1,5 @@
-﻿using FilmesAPI.Models;
+﻿using FilmesAPI.Data.DTO;
+using FilmesAPI.Models;
 using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -32,7 +33,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Filme([FromBody] Filme filme) 
+        public ActionResult Filme([FromBody] GetFilmesDto filme)  //definindo o tipo do dado a receber
         {
             try
             {
@@ -64,9 +65,9 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<bool> Filme([FromRoute] int id)
+        public ActionResult<bool> RemoverFilme([FromRoute] int id)
         {
-            var filme = _service.RemoverFilme(id);
+            bool filme = _service.RemoverFilme(id);
             if (filme == false)
             {
                 return NotFound(filme);
