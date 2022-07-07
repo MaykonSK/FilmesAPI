@@ -62,5 +62,23 @@ namespace FilmesAPI.Controllers
                 throw;
             }
         }
+
+        [HttpDelete("{id}")]
+        public ActionResult<bool> Filme([FromRoute] int id)
+        {
+            var filme = _service.RemoverFilme(id);
+            if (filme == false)
+            {
+                return NotFound(filme);
+            }
+
+            return Ok(filme);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<Filme> Filme([FromRoute] int id, [FromBody] Filme filme)
+        {
+            return Ok(_service.AtualizarFilme(id, filme));
+        }
     }
 }

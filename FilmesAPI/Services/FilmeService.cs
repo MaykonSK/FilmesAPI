@@ -65,5 +65,40 @@ namespace FilmesAPI.Services
             //metood 2
             return _context.Filmes.FirstOrDefault(x => x.Id == id);
         }
+        public bool RemoverFilme(int id)
+        {
+            Filme filme = _context.Filmes.FirstOrDefault(x => x.Id == id);
+            var ok = false;
+
+            if (filme != null)
+            {
+                _context.Remove(filme);
+                _context.SaveChanges();
+                ok = true;
+            }
+            return ok;
+        }
+
+        public bool AtualizarFilme(int id, Filme filmeAtualizar)
+        {
+            Filme filme = _context.Filmes.FirstOrDefault(x => x.Id == id);
+            bool ok = false;
+
+            if (filme != null)
+            {
+                filme.Titulo = filmeAtualizar.Titulo;
+                filme.Diretor = filmeAtualizar.Genero;
+                filme.Genero = filmeAtualizar.Genero;
+                filme.Duracao = filmeAtualizar.Duracao;
+                filme.Ano_Lancamento = filmeAtualizar.Ano_Lancamento;
+
+                _context.SaveChanges();
+
+                return ok = true;
+            }
+
+            return ok;
+
+        }
     }
 }
