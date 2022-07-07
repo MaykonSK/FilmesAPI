@@ -1,4 +1,6 @@
-﻿using FilmesAPI.Models;
+﻿using FilmesAPI.Data;
+using FilmesAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,9 +8,13 @@ namespace FilmesAPI.Services
 {
     public class FilmeService
     {
-        //cria uma lista de filme
-        private static List<Filme> filmes = new List<Filme>();
-        private static int id = 1;
+        //conexao com o banco
+        private DBContext _context;
+
+        public FilmeService(DBContext context) //construtor
+        {
+            _context = context;
+        }
 
         public bool AdicionarFilme(Filme filme)
         {
@@ -17,7 +23,7 @@ namespace FilmesAPI.Services
 
             if (filme != null)
             {
-                foreach (Filme item in filmes)
+                foreach (Filme item in _context.Filmes)
                 {
                     if (item.Id == filme.Id)
                     {
@@ -29,9 +35,8 @@ namespace FilmesAPI.Services
                 if (!existe)
                 {
                     //add o filme
-                    filme.Id = id++;
-                    filmes.Add(filme);
-
+                    _context.Filmes.Add(filme); //adiciona o filme
+                    _context.SaveChanges(); //informa que quer salvar
                     status = true;
                 }
 
@@ -39,9 +44,9 @@ namespace FilmesAPI.Services
             return status;
         }
 
-        public List<Filme> RecuperarFilmes()
+        public IEnumerable<Filme> RecuperarFilmes()
         {
-            return filmes; 
+            return _context.Filmes; //recupera todos os filmes
         }
 
         public Filme RecuperarFilmeId(int id)
@@ -58,7 +63,7 @@ namespace FilmesAPI.Services
             //return null;
 
             //metood 2
-            return filmes.FirstOrDefault(x => x.Id == id);
+            return _context.Filmes.FirstOrDefault(x => x.Id == id);
         }
     }
 }

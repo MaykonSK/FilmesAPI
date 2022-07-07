@@ -4,7 +4,10 @@ namespace FilmesAPI.Models
 {
     public class Filme
     {
-        //[Required(ErrorMessage = "ID obrigatório")] //id é necessario
+        //criar campos no banco de dados com os mesmos nomes
+
+        [Key]
+        [Required(ErrorMessage = "ID obrigatório")] //id é necessario
         public int Id { get; set; }
         [Required(ErrorMessage = "Título obrigatório")] //titulo é necessário
         public string Titulo { get; set; }
