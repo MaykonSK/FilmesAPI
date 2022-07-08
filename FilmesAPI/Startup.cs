@@ -38,6 +38,7 @@ namespace FilmesAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
             });
             services.AddTransient<FilmeService>(); //ativa a classe como service
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //utilizar o auto mapper
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

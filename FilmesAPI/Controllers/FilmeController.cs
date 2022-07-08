@@ -11,7 +11,7 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")] //vai referenciar esse controlador local
     public class FilmeController : ControllerBase //define a classe como controller
     {
-        private readonly FilmeService _service; 
+        private readonly FilmeService _service;
 
         public FilmeController(FilmeService service) //chama o serviço no construtor
         {
@@ -33,7 +33,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Filme([FromBody] GetFilmesDto filme)  //definindo o tipo do dado a receber
+        public ActionResult Filme([FromBody] CreateFilmeDto filme)  //definindo o tipo do dado a receber
         {
             try
             {
@@ -77,7 +77,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Filme> Filme([FromRoute] int id, [FromBody] Filme filme)
+        public ActionResult<Filme> Filme([FromRoute] int id, [FromBody] CreateFilmeDto filme)
         {
             return Ok(_service.AtualizarFilme(id, filme));
         }

@@ -12,6 +12,6 @@ namespace FilmesAPI.Data.DTO
         public string Genero { get; set; }
         public int Duracao { get; set; }
         public int Ano_Lancamento { get; set; }
-        public DateTime HoraDaConsulta { get; set; }
+        public DateTime HoraConsulta { get; set; } = DateTime.Now;
     }
 }
