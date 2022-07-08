@@ -38,6 +38,8 @@ namespace FilmesAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
             });
             services.AddTransient<FilmeService>(); //ativa a classe como service
+            services.AddTransient<CinemaService>(); //ativa a classe como service
+            services.AddTransient<EnderecoService>(); //ativa a classe como service
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //utilizar o auto mapper
         }
 

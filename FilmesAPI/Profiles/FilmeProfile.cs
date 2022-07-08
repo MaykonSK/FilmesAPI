@@ -9,8 +9,9 @@ namespace FilmesAPI.Profiles
     {
         public FilmeProfile()
         {
-            CreateMap<CreateFilmeDto, Filme>();
-            CreateMap<Filme, GetFilmesDto>();
+            //precisa sempre especificar os tipos de conversão possivel
+            CreateMap<CreateFilmeDto, Filme>(); //CreateFilmeDto p/ Filme
+            CreateMap<Filme, GetFilmesDto>(); //Filme p/ GetFilmesDto
         }
     }
 }

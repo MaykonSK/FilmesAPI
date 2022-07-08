@@ -17,5 +17,7 @@ namespace FilmesAPI.Data
 
         //mapear classes
         public DbSet<Filme> Filmes { get; set; } //DbSet<Filme> é a classe que vamos mapear // Filmes é o nome da tabela banco de dados
+        public DbSet<Cinema> Cinemas { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
     }
 }
