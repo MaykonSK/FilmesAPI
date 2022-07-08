@@ -15,6 +15,15 @@ namespace FilmesAPI.Data
 
         }
 
+        //relacionar classes
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Endereco>()
+                .HasOne(endereco => endereco.Cinema) //endereço possui 1 cinema
+                .WithOne(cinema => cinema.Endereco) //cinema possui 1 endereço
+                .HasForeignKey<Cinema>(cinema => cinema.EnderecoId); //define a primary key (EnderecoId) na classe Cinema
+        }
+
         //mapear classes
         public DbSet<Filme> Filmes { get; set; } //DbSet<Filme> é a classe que vamos mapear // Filmes é o nome da tabela banco de dados
         public DbSet<Cinema> Cinemas { get; set; }
