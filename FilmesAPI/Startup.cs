@@ -30,7 +30,8 @@ namespace FilmesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //configura o banco de dados // DBContext é o nome da classe de conexao criada
-            services.AddDbContext<DBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("FilmesConexao")));
+            services.AddDbContext<DBContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("FilmesConexao")));
+                                                       //  NOVA PROPRIEDADE  //
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

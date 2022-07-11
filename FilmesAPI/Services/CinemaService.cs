@@ -40,6 +40,12 @@ namespace FilmesAPI.Services
             return cinema;
         }
 
+        public Cinema getCinemaId(int id)
+        {
+            Cinema cinema = _context.Cinemas.FirstOrDefault(x => x.Id == id);
+            return cinema;
+        }
+
         public Cinema atualizarCinema(int id, Cinema cinemaNovo)
         {
             Cinema cinema = _context.Cinemas.FirstOrDefault(x => x.Id == id); //pega o primeiro que encontrar com o id fornecido ou retorna null

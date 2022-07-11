@@ -13,8 +13,11 @@ namespace FilmesAPI.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "O nome é obrigatório")]
         public string Nome { get; set; }
-        public Endereco Endereco { get; set; }
+        public virtual Endereco Endereco { get; set; }
         [Required]
         public int EnderecoId { get; set; }
+        public virtual Gerente Gerente { get; set; }
+        [Required]
+        public int GerenteId { get; set; }
     }
 }

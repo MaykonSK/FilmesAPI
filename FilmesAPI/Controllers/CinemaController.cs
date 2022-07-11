@@ -32,6 +32,12 @@ namespace FilmesAPI.Controllers
             return Ok(_service.getCinemas());
         }
 
+        [HttpGet("{id}")]
+        public IActionResult Cinema([FromRoute] int id)
+        {
+            return Ok(_service.getCinemaId(id));
+        }
+
         [HttpPut("{id}")]
         public IActionResult Cinema(int id, [FromBody] Cinema cinema)
         {
