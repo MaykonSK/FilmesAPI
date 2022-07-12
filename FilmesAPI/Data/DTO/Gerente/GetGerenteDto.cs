@@ -10,6 +10,6 @@ namespace FilmesAPI.Data.DTO.Gerente
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public virtual List<Cinema> Cinemas { get; set; }
+        public object Cinemas { get; set; } //um objeto de Cinemas. O mesmo deve ser configurado no CinemaProfile
     }
 }

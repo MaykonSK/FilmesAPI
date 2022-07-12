@@ -12,7 +12,13 @@ namespace FilmesAPI.Profiles
     {
         public GerenteProfile()
         {
-            CreateMap<Gerente, GetGerenteDto>();
+            //Estamos mapeando de um Gerente para um ReadGerenteDto. Para o campo Cinemas, estamos selecionando apenas os campos Id, Nome, Endereco e EnderedoId.
+            //mapear atributos especificos para evitar dados repetidos
+            CreateMap<Gerente, GetGerenteDto>()
+                .ForMember(gerente => gerente.Cinemas, opt => opt 
+                .MapFrom(gerente => gerente.Cinemas.Select                   
+                (c => new { c.Id, c.Nome, c.Endereco })));
+
             CreateMap<GetGerenteDto, Gerente>();
             CreateMap<Gerente, CreateGerenteDto>();
             CreateMap<CreateGerenteDto, Gerente>();
