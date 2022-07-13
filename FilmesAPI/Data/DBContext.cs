@@ -28,7 +28,17 @@ namespace FilmesAPI.Data
                 .WithMany(gerente => gerente.Cinemas) //muitos
                 .HasForeignKey(cinema => cinema.GerenteId)
                 .OnDelete(DeleteBehavior.Restrict); //não permite excluir dados com dependencia
-                //No modo cascata, se tentarmos deletar um recurso que é dependência de outro, todos os outros recursos que dependem desse serão excluídos também. No modo restrito não conseguiremos efetuar a deleção.
+                                                    //No modo cascata, se tentarmos deletar um recurso que é dependência de outro, todos os outros recursos que dependem desse serão excluídos também. No modo restrito não conseguiremos efetuar a deleção.
+
+            modelBuilder.Entity<Sessao>()
+                .HasOne(sessao => sessao.Filme)
+                .WithMany(filme => filme.Sessoes)
+                .HasForeignKey(sessao => sessao.FilmeId);
+
+            modelBuilder.Entity<Sessao>()
+                .HasOne(sessao => sessao.Cinema)
+                .WithMany(cinema => cinema.Sessoes)
+                .HasForeignKey(sessao => sessao.CinemaId);
         }
 
         //mapear classes
@@ -36,5 +46,7 @@ namespace FilmesAPI.Data
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Gerente> Gerentes{ get; set; }
+
+        public DbSet<Sessao> Sessao { get; set; }
     }
 }
