@@ -5,6 +5,7 @@ using FilmesAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace FilmesAPI.Services
@@ -49,11 +50,30 @@ namespace FilmesAPI.Services
             return status;
         }
 
-        public IEnumerable<Filme> RecuperarFilmes()
+        public IEnumerable<Filme> RecuperarFilmes(string? genero = null) //parametro adicional (ex: https://localhost:5001/filme?Genero=Aventura)
         {
             //return _context.Filmes; //recupera todos os filmes
-            IEnumerable<Filme> filme =  _context.Filmes.ToList();
-            return filme;
+
+            //primeira letra maiuscula
+            IEnumerable<Filme> filme;
+
+            if (genero == null)
+            {
+                filme = _context.Filmes.ToList();
+            } else
+            {
+                string GeneroFormatado = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(genero.ToLower());
+                filme = _context.Filmes.Where(x => x.Genero == GeneroFormatado).ToList();
+            }
+            
+
+            if (filme != null)
+            {
+                return filme;
+            }
+
+            return null;
+            
 
         }
 

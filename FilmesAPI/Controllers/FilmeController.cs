@@ -19,12 +19,12 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Filme> Filme() //ActionResult retorna uma lista + status
+        public ActionResult<Filme> Filme([FromQuery] string genero) //ActionResult retorna uma lista + status //FromQuery coloca um parametro na URL. (ex: https://localhost:5001/filme?Genero=Aventura)
         {
             try
             {
                 //no padrão REST, não precisa informar notfound para uma lista geral
-                return Ok(_service.RecuperarFilmes());
+                return Ok(_service.RecuperarFilmes(genero));
             }
             catch (System.Exception)
             {
