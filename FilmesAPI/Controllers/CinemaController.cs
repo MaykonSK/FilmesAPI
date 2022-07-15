@@ -27,9 +27,10 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Cinema()
+        public IActionResult Cinema([FromQuery] string nomeDoFilme)
         {
-            return Ok(_service.getCinemas());
+            
+            return Ok(_service.getCinemas(nomeDoFilme));
         }
 
         [HttpGet("{id}")]

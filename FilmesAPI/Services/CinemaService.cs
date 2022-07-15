@@ -34,10 +34,21 @@ namespace FilmesAPI.Services
             return status;  
         }
 
-        public IEnumerable<Cinema> getCinemas()
+        public IEnumerable<Cinema> getCinemas(string nomeDoFilme)
         {
-            IEnumerable<Cinema> cinema = _context.Cinemas;
-            return cinema;
+            IEnumerable<Cinema> cinemas = _context.Cinemas.ToList();
+
+            if (!string.IsNullOrEmpty(nomeDoFilme)) //se nomeDoFilme for diferente de null
+            {
+                //Consultando via query
+                IEnumerable<Cinema> query = from cinema in cinemas
+                        where cinema.Sessoes.Any(sessao => sessao.Filme.Titulo == nomeDoFilme)
+                        select cinema;
+
+                cinemas = query.ToList();
+            }
+            
+            return cinemas;
         }
 
         public Cinema getCinemaId(int id)
