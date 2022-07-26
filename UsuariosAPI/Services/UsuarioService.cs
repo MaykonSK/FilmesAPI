@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,14 @@ namespace UsuariosAPI.Services
     public class UsuarioService
     {
         private IMapper _mapper;
-        private UserManager<IdentityUser<int>> _userManager; //possui diversos metodos para o geneciamento de usuario
+        private UserManager<IdentityUser<int>> _userManager; //possui diversos metodos para o geneciamento de usuario //serve para cadastrar usuario
+        private SignInManager<IdentityUser<int>> _signInManager; //serve para fazer login
 
-        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager)
+        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager)
         {
             _mapper = mapper;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public bool cadastrarUsuario(CreateUsuarioDto usuarioDto)
@@ -36,6 +39,16 @@ namespace UsuariosAPI.Services
                 return true;
             }
             return false;
+        }
+
+        public Result logarUsuario(Login login)
+        {
+            var resultado = _signInManager.PasswordSignInAsync(login.Username, login.Password, false, false);
+            if (resultado.Result.Succeeded)
+            {
+                return Result.Ok();
+            }
+            return Result.Fail("Login falhou");
         }
     }
 }
