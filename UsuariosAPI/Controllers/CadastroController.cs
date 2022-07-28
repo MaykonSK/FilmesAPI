@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,12 @@ namespace UsuariosAPI.Controllers
         [HttpPost]
         public IActionResult cadastrarUsuario(CreateUsuarioDto createDto)
         {
-            return Ok(_service.cadastrarUsuario(createDto));
+            Result resultado = _service.cadastrarUsuario(createDto);
+            if (resultado.IsFailed)
+            {
+                return StatusCode(500);
+            }
+            return Ok(resultado.Successes.FirstOrDefault());
         }
     }
 }

@@ -25,7 +25,7 @@ namespace UsuariosAPI.Services
             _tokenService = tokenService;
         }
 
-        public bool cadastrarUsuario(CreateUsuarioDto usuarioDto)
+        public Result cadastrarUsuario(CreateUsuarioDto usuarioDto)
         {
             //passando os dados do DTO para o usuario
             Usuario usuario = _mapper.Map<Usuario>(usuarioDto);
@@ -38,9 +38,10 @@ namespace UsuariosAPI.Services
 
             if (resultado.Result.Succeeded)
             {
-                return true;
+                string code = _userManager.GeneratePasswordResetTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
+                return Result.Ok().WithSuccess(code);
             }
-            return false;
+            return Result.Fail("Falha ao cadastrar usuário");
         }
 
         public Result logarUsuario(Login login)
