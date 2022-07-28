@@ -45,6 +45,7 @@ namespace UsuariosAPI
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //utilizar o auto mapper
             services.AddTransient<UsuarioService>(); //ativa a classe como service
+            services.AddTransient<TokenService>(); //ativa a classe como service
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

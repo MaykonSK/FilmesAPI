@@ -15,12 +15,14 @@ namespace UsuariosAPI.Services
         private IMapper _mapper;
         private UserManager<IdentityUser<int>> _userManager; //possui diversos metodos para o geneciamento de usuario //serve para cadastrar usuario
         private SignInManager<IdentityUser<int>> _signInManager; //serve para fazer login
+        private TokenService _tokenService;
 
-        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager)
+        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager, TokenService tokenService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenService = tokenService;
         }
 
         public bool cadastrarUsuario(CreateUsuarioDto usuarioDto)
@@ -46,7 +48,15 @@ namespace UsuariosAPI.Services
             var resultado = _signInManager.PasswordSignInAsync(login.Username, login.Password, false, false);
             if (resultado.Result.Succeeded)
             {
-                return Result.Ok();
+                
+                //recuperar identity user
+                var identityUser = _signInManager.UserManager.Users.FirstOrDefault(usuario => usuario.NormalizedUserName == login.Username.ToUpper());
+
+                //gerar token e retornar para o osuaurio
+                Token token = _tokenService.CreateToken(identityUser);
+
+                //retorna o token para o controller
+                return Result.Ok().WithSuccess(token.Value);
             }
             return Result.Fail("Login falhou");
         }

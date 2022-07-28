@@ -28,9 +28,10 @@ namespace UsuariosAPI.Controllers
             if (resultado.IsFailed)
             {
                 //não autorizado
-                return Unauthorized();
+                return Unauthorized(resultado.Errors.FirstOrDefault());
             }
-            return Ok();
+
+            return Ok(resultado.Successes.FirstOrDefault()); //retorna token para o client
         }
     }
 }
