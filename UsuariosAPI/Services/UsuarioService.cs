@@ -45,7 +45,9 @@ namespace UsuariosAPI.Services
 
         public Result logarUsuario(Login login)
         {
+            //efetuar autenticação via senha
             var resultado = _signInManager.PasswordSignInAsync(login.Username, login.Password, false, false);
+            
             if (resultado.Result.Succeeded)
             {
                 
@@ -59,6 +61,17 @@ namespace UsuariosAPI.Services
                 return Result.Ok().WithSuccess(token.Value);
             }
             return Result.Fail("Login falhou");
+        }
+
+        public Result deslogarUsuario()
+        {
+            var resultado = _signInManager.SignOutAsync();
+            if (resultado.IsCompletedSuccessfully)
+            {
+                Result.Ok();
+            }
+
+            return Result.Fail("Logout falhou");
         }
     }
 }
