@@ -31,7 +31,10 @@ namespace UsuariosAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UserDbContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("UsuarioConexao"))); //configurar o sql  server
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>().AddEntityFrameworkStores<UserDbContext>(); //configurar o identity
+
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+                opt => opt.SignIn.RequireConfirmedEmail = true //requerendo confirmação de e-mail - o usuario nao pode fazer login sem confirmar o e-mail
+                ).AddEntityFrameworkStores<UserDbContext>(); //configurar o identity
 
             //isso desabilita os requisitos de ter uma letra maiúscula e um caracter especial na senha do cadastro do usuario
             //services.Configure<IdentityOptions>(options =>
