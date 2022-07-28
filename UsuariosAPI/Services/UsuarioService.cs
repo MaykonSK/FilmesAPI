@@ -68,7 +68,7 @@ namespace UsuariosAPI.Services
             var resultado = _signInManager.SignOutAsync();
             if (resultado.IsCompletedSuccessfully)
             {
-                Result.Ok();
+                return Result.Ok();
             }
 
             return Result.Fail("Logout falhou");
