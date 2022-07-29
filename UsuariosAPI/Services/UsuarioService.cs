@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using UsuariosAPI.Models;
 using UsuariosAPI.Models.DTO;
 
@@ -41,8 +42,10 @@ namespace UsuariosAPI.Services
             if (resultado.Result.Succeeded)
             {
                 var code = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
-                _emailService.EnviarEmail(new[] { usuarioIdentity.Email }, "link de ativação", usuarioIdentity.Id, code);
-                return Result.Ok().WithSuccess(code);
+                var encodeCode = HttpUtility.UrlDecode(code);
+
+                _emailService.EnviarEmail(new[] { usuarioIdentity.Email }, "link de ativação", usuarioIdentity.Id, encodeCode);
+                return Result.Ok().WithSuccess(encodeCode);
             }
             return Result.Fail("Falha ao cadastrar usuário");
         }

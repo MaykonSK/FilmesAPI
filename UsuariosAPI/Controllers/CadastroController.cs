@@ -32,8 +32,8 @@ namespace UsuariosAPI.Controllers
             return Ok(resultado.Successes.FirstOrDefault());
         }
 
-        [HttpPost("/ativa")]
-        public IActionResult ativaContaUsuario(AtivaConta request)
+        [HttpGet("/ativa")]
+        public IActionResult ativaContaUsuario([FromQuery] AtivaConta request)
         {
             Result resultado = _service.ativaContaUsuario(request);
 
