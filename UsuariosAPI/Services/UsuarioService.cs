@@ -16,13 +16,15 @@ namespace UsuariosAPI.Services
         private UserManager<IdentityUser<int>> _userManager; //possui diversos metodos para o geneciamento de usuario //serve para cadastrar usuario
         private SignInManager<IdentityUser<int>> _signInManager; //serve para fazer login
         private TokenService _tokenService;
+        private EmailService _emailService;
 
-        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager, TokenService tokenService)
+        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager, TokenService tokenService, EmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _emailService = emailService;
         }
 
         public Result cadastrarUsuario(CreateUsuarioDto usuarioDto)
@@ -39,6 +41,7 @@ namespace UsuariosAPI.Services
             if (resultado.Result.Succeeded)
             {
                 var code = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
+                _emailService.EnviarEmail(new[] { usuarioIdentity.Email }, "link de ativação", usuarioIdentity.Id, code);
                 return Result.Ok().WithSuccess(code);
             }
             return Result.Fail("Falha ao cadastrar usuário");
