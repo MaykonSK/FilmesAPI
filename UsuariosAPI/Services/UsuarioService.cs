@@ -38,7 +38,7 @@ namespace UsuariosAPI.Services
 
             if (resultado.Result.Succeeded)
             {
-                string code = _userManager.GeneratePasswordResetTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
+                var code = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
                 return Result.Ok().WithSuccess(code);
             }
             return Result.Fail("Falha ao cadastrar usuário");
@@ -73,6 +73,23 @@ namespace UsuariosAPI.Services
             }
 
             return Result.Fail("Logout falhou");
+        }
+
+        public Result ativaContaUsuario(AtivaConta request)
+        {
+            //recupera usuario identity
+            var userIdentity = _userManager.Users.FirstOrDefault(user => user.Id == request.UsuarioId);
+
+            //confirmar o e-mail
+            var identityResult = _userManager.ConfirmEmailAsync(userIdentity, request.CodigoAtivacao).Result;
+
+            if (identityResult.Succeeded)
+            {
+                return Result.Ok();
+            }
+
+            return Result.Fail("Falha ao ativar conta de usuário");
+            
         }
     }
 }
