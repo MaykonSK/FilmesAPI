@@ -30,7 +30,7 @@ namespace UsuariosAPI.Services
                 try
                 {
                     //Configurando o servidor de email
-                    client.Connect(_configuration.GetValue<string>("EmailSettings:SmtpServer"), _configuration.GetValue<int>("EmailSettings:Port"), true);
+                    client.Connect(_configuration.GetValue<string>("EmailSettings:SmtpServer"), _configuration.GetValue<int>("EmailSettings:Port"), false);
                     client.AuthenticationMechanisms.Remove("XOUATH2");
                     client.Authenticate(_configuration.GetValue<string>("EmailSettings:From"), _configuration.GetValue<string>("EmailSettings:Password"));
 
@@ -52,7 +52,7 @@ namespace UsuariosAPI.Services
         private MimeMessage CriaCorpoEmail(Mensagem mensagem)
         {
             var mensagemEmail = new MimeMessage();
-            mensagemEmail.From.Add(new MailboxAddress("",_configuration.GetValue<string>("EmailSettings:From")));
+            mensagemEmail.From.Add(new MailboxAddress("teste",_configuration.GetValue<string>("EmailSettings:From")));
             mensagemEmail.To.AddRange(mensagem.Destinatario);
             mensagemEmail.Subject = mensagem.Assunto;
             mensagemEmail.Body = new TextPart(MimeKit.Text.TextFormat.Text)

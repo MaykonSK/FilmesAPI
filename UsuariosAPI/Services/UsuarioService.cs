@@ -42,10 +42,10 @@ namespace UsuariosAPI.Services
             if (resultado.Result.Succeeded)
             {
                 var code = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
-                var encodeCode = HttpUtility.UrlDecode(code);
+                var encodeCode = HttpUtility.UrlEncode(code);
 
                 _emailService.EnviarEmail(new[] { usuarioIdentity.Email }, "link de ativação", usuarioIdentity.Id, encodeCode);
-                return Result.Ok().WithSuccess(encodeCode);
+                return Result.Ok().WithSuccess(code);
             }
             return Result.Fail("Falha ao cadastrar usuário");
         }
