@@ -18,14 +18,16 @@ namespace UsuariosAPI.Services
         private SignInManager<IdentityUser<int>> _signInManager; //serve para fazer login
         private TokenService _tokenService;
         private EmailService _emailService;
+        private RoleManager<IdentityRole<int>> _roleManager;
 
-        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager, TokenService tokenService, EmailService emailService)
+        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager, TokenService tokenService, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _emailService = emailService;
+            _roleManager = roleManager;
         }
 
         public Result cadastrarUsuario(CreateUsuarioDto usuarioDto)
@@ -41,6 +43,12 @@ namespace UsuariosAPI.Services
 
             if (resultado.Result.Succeeded)
             {
+                //cria role
+                var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
+
+                //adiciona uma role admin para o usuario
+                var usuarioRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "admin").Result;
+
                 var code = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
                 var encodeCode = HttpUtility.UrlEncode(code);
 
@@ -62,7 +70,7 @@ namespace UsuariosAPI.Services
                 var identityUser = _signInManager.UserManager.Users.FirstOrDefault(usuario => usuario.NormalizedUserName == login.Username.ToUpper());
 
                 //gerar token e retornar para o osuaurio
-                Token token = _tokenService.CreateToken(identityUser);
+                Token token = _tokenService.CreateToken(identityUser, _signInManager.UserManager.GetRolesAsync(identityUser).Result.FirstOrDefault());
 
                 //retorna o token para o controller
                 return Result.Ok().WithSuccess(token.Value);
