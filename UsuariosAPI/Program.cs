@@ -21,6 +21,7 @@ namespace UsuariosAPI
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .ConfigureAppConfiguration((context, builder) => builder.AddUserSecrets<Program>()); //utiliza secrets para guardar os dados do appsettings.json, como os dados do e-mail de envio
     }
 }
