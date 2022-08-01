@@ -97,5 +97,34 @@ namespace UsuariosAPI.Services
             return Result.Fail("Falha ao ativar conta de usuário");
             
         }
+
+        public Result solicitaResetSenha(SolicitaResetSenha request)
+        {
+            //recupera usuario identity pelo email
+            var userIdentity = _userManager.Users.FirstOrDefault(user => user.Email == request.Email);
+
+            if (userIdentity != null)
+            {
+                //solicita token para redefinição de senha
+                string codigoDeRecuperacao = _signInManager.UserManager.GeneratePasswordResetTokenAsync(userIdentity).Result;
+                return Result.Ok().WithSuccess(codigoDeRecuperacao);
+            }
+
+            return Result.Fail("Falha ao solicitar redefinição");
+        }
+
+        public Result redefinirSenha(RedefinicaoSenha request)
+        {
+            //recupera usuario identity pelo email
+            var userIdentity = _userManager.Users.FirstOrDefault(user => user.Email == request.Email);
+
+            IdentityResult resultado = _signInManager.UserManager.ResetPasswordAsync(userIdentity, request.Token, request.Password).Result;
+            if (resultado.Succeeded)
+            {
+                return Result.Ok().WithSuccess("Senha definida com sucesso");
+            }
+
+            return Result.Fail("Não foi possivel redefinir a senha");
+        }
     }
 }

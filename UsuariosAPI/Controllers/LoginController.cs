@@ -33,5 +33,29 @@ namespace UsuariosAPI.Controllers
 
             return Ok(resultado.Successes.FirstOrDefault()); //retorna token para o client
         }
+
+        [HttpPost("/solicita-reset-senha")]
+        public IActionResult SolicitaResetSenha(SolicitaResetSenha request)
+        {
+            Result resultado = _service.solicitaResetSenha(request);
+            if (resultado.IsFailed)
+            {
+                return Unauthorized(resultado.Errors);
+            }
+
+            return Ok(resultado.Successes.FirstOrDefault());
+        }
+
+        [HttpPost("/redefinir-senha")]
+        public IActionResult RedefinirSenha(RedefinicaoSenha request)
+        {
+            Result resultado = _service.redefinirSenha(request);
+            if (resultado.IsFailed)
+            {
+                return Unauthorized(resultado.Errors);
+            }
+
+            return Ok(resultado.Successes.FirstOrDefault());
+        }
     }
 }
