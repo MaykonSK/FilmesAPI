@@ -1,6 +1,7 @@
 ﻿using FilmesAPI.Data.DTO;
 using FilmesAPI.Models;
 using FilmesAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Filme([FromBody] CreateFilmeDto filme)  //definindo o tipo do dado a receber
         {
             try
