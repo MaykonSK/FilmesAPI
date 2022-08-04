@@ -14,20 +14,18 @@ namespace UsuariosAPI.Services
     public class UsuarioService
     {
         private IMapper _mapper;
-        private UserManager<IdentityUser<int>> _userManager; //possui diversos metodos para o geneciamento de usuario //serve para cadastrar usuario
-        private SignInManager<IdentityUser<int>> _signInManager; //serve para fazer login
+        private UserManager<CustomIdentityUser> _userManager; //possui diversos metodos para o geneciamento de usuario //serve para cadastrar usuario
+        private SignInManager<CustomIdentityUser> _signInManager; //serve para fazer login
         private TokenService _tokenService;
         private EmailService _emailService;
-        private RoleManager<IdentityRole<int>> _roleManager;
 
-        public UsuarioService(IMapper mapper, UserManager<IdentityUser<int>> userManager, SignInManager<IdentityUser<int>> signInManager, TokenService tokenService, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
+        public UsuarioService(IMapper mapper, UserManager<CustomIdentityUser> userManager, SignInManager<CustomIdentityUser> signInManager, TokenService tokenService, EmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _emailService = emailService;
-            _roleManager = roleManager;
         }
 
         public Result cadastrarUsuario(CreateUsuarioDto usuarioDto)
@@ -36,18 +34,22 @@ namespace UsuariosAPI.Services
             Usuario usuario = _mapper.Map<Usuario>(usuarioDto);
 
             //passando os dados do usuario para o identity
-            IdentityUser<int> usuarioIdentity = _mapper.Map<IdentityUser<int>>(usuario);
+            CustomIdentityUser usuarioIdentity = _mapper.Map<CustomIdentityUser>(usuario);
 
             //obtem o resultado da criação    //criando o usuario no identity
             Task<IdentityResult> resultado = _userManager.CreateAsync(usuarioIdentity, usuarioDto.Password);
 
+            
+
             if (resultado.Result.Succeeded)
             {
                 //cria role
-                var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
+                //var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
 
                 //adiciona uma role admin para o usuario
-                var usuarioRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "admin").Result;
+                //var usuarioRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "admin").Result;
+
+                _userManager.AddToRoleAsync(usuarioIdentity, "regular");
 
                 var code = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result; //recuperar codigo de autenticação de e-mail
                 var encodeCode = HttpUtility.UrlEncode(code);

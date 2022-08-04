@@ -11,7 +11,7 @@ namespace UsuariosAPI.Services
     public class TokenService
     {
         //gerar token
-        public Token CreateToken(IdentityUser<int> usuario, string role)
+        public Token CreateToken(CustomIdentityUser usuario, string role)
         {
             Claim[] direitosUsuario = new Claim[]
             {

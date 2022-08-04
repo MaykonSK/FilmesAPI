@@ -20,6 +20,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, regular")]
         public ActionResult<Filme> Filme([FromQuery] string genero) //ActionResult retorna uma lista + status //FromQuery coloca um parametro na URL. (ex: https://localhost:5001/filme?Genero=Aventura)
         {
             try

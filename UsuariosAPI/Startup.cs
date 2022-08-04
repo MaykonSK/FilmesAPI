@@ -34,7 +34,7 @@ namespace UsuariosAPI
             services.AddDbContext<UserDbContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("UsuarioConexao"))); //configurar o sql  server
 
             //configurar o identity
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+            services.AddIdentity<CustomIdentityUser, IdentityRole<int>>(
                 opt => opt.SignIn.RequireConfirmedEmail = true //requerendo confirmação de e-mail - o usuario nao pode fazer login sem confirmar o e-mail
                 ).AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders(); //autorizando token de confirmação de e-mail
